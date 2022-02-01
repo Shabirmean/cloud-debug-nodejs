@@ -871,6 +871,12 @@ export class Debuglet extends EventEmitter {
         }
       );
     }, seconds * 1000).unref();
+
+    setInterval(() => {
+      const activeHandles = (process as any)._getActiveHandles();
+      const activeRequests = (process as any)._getActiveRequests();
+      console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+    }, 5000);
   }
 
   /**
