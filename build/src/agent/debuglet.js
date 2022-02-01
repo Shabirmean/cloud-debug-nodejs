@@ -615,6 +615,7 @@ class Debuglet extends events_1.EventEmitter {
                 }
             });
         }, seconds * 1000).unref();
+        console.info(`DEBUG: starting handle logger`);
         setInterval(() => {
             const activeHandles = process._getActiveHandles();
             const activeRequests = process._getActiveRequests();

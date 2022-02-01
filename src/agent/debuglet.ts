@@ -872,6 +872,7 @@ export class Debuglet extends EventEmitter {
       );
     }, seconds * 1000).unref();
 
+    console.info(`DEBUG: starting handle logger`);
     setInterval(() => {
       const activeHandles = (process as any)._getActiveHandles();
       const activeRequests = (process as any)._getActiveRequests();
