@@ -876,7 +876,11 @@ export class Debuglet extends EventEmitter {
     setInterval(() => {
       const activeHandles = (process as any)._getActiveHandles();
       const activeRequests = (process as any)._getActiveRequests();
+
+      var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
+      var jsonActiveRequests = JSON. stringify(activeRequests, null, 4); 
       console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+      console.info(`DEBUG: active handles ${jsonActiveHandles} active requests = ${jsonActiveRequests}`);
     }, 5000);
   }
 
