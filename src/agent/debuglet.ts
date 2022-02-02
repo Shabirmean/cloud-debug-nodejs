@@ -879,8 +879,16 @@ export class Debuglet extends EventEmitter {
       const activeRequests = (process as any)._getActiveRequests();
       // var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
       // var jsonActiveRequests = JSON. stringify(activeRequests, null, 4); 
-      console.log(`DEBUG WTFDUMP: ${wtf.dump()}`)
-      console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+      // https://medium.com/trabe/detecting-node-js-active-handles-with-wtfnode-704e91f2b120
+      // console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+      console.log(`-------------- 1 ---------------`)
+      console.log(activeHandles)
+      console.log(`-------------- 2 ---------------`)
+      console.log(activeRequests)
+      console.log(`-------------- 3 ---------------`)
+      console.log(`DEBUG WTFDUMP:`)
+      wtf.dump();
+      console.log(`-------------- 4 ---------------`)
       // console.info(`DEBUG: active handles ${jsonActiveHandles} active requests = ${jsonActiveRequests}`);
     }, 5000);
   }
