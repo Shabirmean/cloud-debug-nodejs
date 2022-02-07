@@ -912,6 +912,20 @@ export class Debuglet extends EventEmitter {
     })
   }
 
+  private writeToWtfFile(logData: string) {
+    const wtfFile = `/var/mem/wtf.txt`;
+    if (typeof logData !== 'string') {
+      logData = JSON.stringify(logData);
+    }
+    fs.writeFile(wtfFile, logData, { flag: 'a+' }, err => {
+      if (err) {
+        console.log('MEM_DEBUG: error writing to file', wtfFile);
+        console.log(err);
+        return
+      }
+    })
+  }
+
   /**
    * updatePromise_ is called when debuggee is expired. debuggeeRegistered
    * CachedPromise will be refreshed. Also, breakpointFetched CachedPromise will
