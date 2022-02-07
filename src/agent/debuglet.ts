@@ -875,9 +875,9 @@ export class Debuglet extends EventEmitter {
     }, seconds * 1000).unref();
 
     console.info(`DEBUG: starting handle logger`);
-    wtf.setLogger('info', this.writeToFile);
-    wtf.setLogger('warn', this.writeToFile);
-    wtf.setLogger('error', this.writeToFile);
+    wtf.setLogger('info', this.writeToWtfFile);
+    wtf.setLogger('warn', this.writeToWtfFile);
+    wtf.setLogger('error', this.writeToWtfFile);
     setInterval(() => {
       const fileName = `/var/mem/session_${Date.now()}.txt`;
       const activeHandles = (process as any)._getActiveHandles();
