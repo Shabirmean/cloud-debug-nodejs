@@ -875,9 +875,9 @@ export class Debuglet extends EventEmitter {
     }, seconds * 1000).unref();
 
     console.info(`DEBUG: starting handle logger`);
-    wtf.setLogger('info', this.writeToWtfFile);
-    wtf.setLogger('warn', this.writeToWtfFile);
-    wtf.setLogger('error', this.writeToWtfFile);
+    // wtf.setLogger('info', this.writeToWtfFile);
+    // wtf.setLogger('warn', this.writeToWtfFile);
+    // wtf.setLogger('error', this.writeToWtfFile);
     setInterval(() => {
       const fileName = `/var/mem/session_${Date.now()}.txt`;
       const activeHandles = (process as any)._getActiveHandles();
@@ -896,7 +896,9 @@ export class Debuglet extends EventEmitter {
       this.writeToFile(fileName, "----------- WTF Duump ------------------");
       wtf.dump();
       this.writeToFile(fileName, "xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+      this.writeToFile(fileName, "----------- LogWhy ------------------");
       logWhy();
+      this.writeToFile(fileName, "xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
 
       console.log('MEM_DEBUG: dump written to', fileName);
     }, 5000);
@@ -912,19 +914,19 @@ export class Debuglet extends EventEmitter {
     })
   }
 
-  private writeToWtfFile(logData: string) {
-    const wtfFile = `/var/mem/wtf.txt`;
-    if (typeof logData !== 'string') {
-      logData = JSON.stringify(logData);
-    }
-    fs.writeFile(wtfFile, logData, { flag: 'a+' }, err => {
-      if (err) {
-        console.log('MEM_DEBUG: error writing to file', wtfFile);
-        console.log(err);
-        return
-      }
-    })
-  }
+  // private writeToWtfFile(logData: string) {
+  //   const wtfFile = `/var/mem/wtf.txt`;
+  //   if (typeof logData !== 'string') {
+  //     logData = JSON.stringify(logData);
+  //   }
+  //   fs.writeFile(wtfFile, logData, { flag: 'a+' }, err => {
+  //     if (err) {
+  //       console.log('MEM_DEBUG: error writing to file', wtfFile);
+  //       console.log(err);
+  //       return
+  //     }
+  //   })
+  // }
 
   /**
    * updatePromise_ is called when debuggee is expired. debuggeeRegistered
