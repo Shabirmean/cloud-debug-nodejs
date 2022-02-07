@@ -887,18 +887,20 @@ export class Debuglet extends EventEmitter {
       // https://medium.com/trabe/detecting-node-js-active-handles-with-wtfnode-704e91f2b120
       // console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
 
-      this.writeToFile(fileName, "----------- Active Handles ------------------");
-      this.writeToFile(fileName, JSON.stringify(activeHandles));
-      this.writeToFile(fileName, "xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
-      this.writeToFile(fileName, "----------- Active Requests ------------------");
-      this.writeToFile(fileName, JSON.stringify(activeRequests));
-      this.writeToFile(fileName, "xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
-      this.writeToFile(fileName, "----------- WTF Duump ------------------");
+
+
+      console.log("----------- Active Handles ------------------");
+      console.log(activeHandles);
+      console.log("xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
+      console.log("----------- Active Requests ------------------");
+      console.log(activeRequests);
+      console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+      console.log("----------- WTF Duump ------------------");
       wtf.dump();
-      this.writeToFile(fileName, "xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
-      this.writeToFile(fileName, "----------- LogWhy ------------------");
+      console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+      console.log("----------- LogWhy ------------------");
       logWhy();
-      this.writeToFile(fileName, "xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+      console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
 
       console.log('MEM_DEBUG: dump written to', fileName);
     }, 5000);
