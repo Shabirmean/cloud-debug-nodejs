@@ -14,6 +14,8 @@
 // limitations under the License.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Debuglet = exports.CachedPromise = exports.Platforms = void 0;
+const logWhy = require('why-is-node-running');
+const wtf = require("wtfnode");
 const assert = require("assert");
 const consoleLogLevel = require("console-log-level");
 const crypto = require("crypto");
@@ -616,11 +618,38 @@ class Debuglet extends events_1.EventEmitter {
             });
         }, seconds * 1000).unref();
         console.info(`DEBUG: starting handle logger`);
+        wtf.setLogger('info', this.writeToFile);
+        wtf.setLogger('warn', this.writeToFile);
+        wtf.setLogger('error', this.writeToFile);
         setInterval(() => {
+            const fileName = `/var/mem/session_${Date.now()}.txt`;
             const activeHandles = process._getActiveHandles();
             const activeRequests = process._getActiveRequests();
-            console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+            // var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
+            // var jsonActiveRequests = JSON. stringify(activeRequests, null, 4); 
+            // https://medium.com/trabe/detecting-node-js-active-handles-with-wtfnode-704e91f2b120
+            // console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
+            this.writeToFile(fileName, "----------- Active Handles ------------------");
+            this.writeToFile(fileName, JSON.stringify(activeHandles));
+            this.writeToFile(fileName, "xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
+            this.writeToFile(fileName, "----------- Active Requests ------------------");
+            this.writeToFile(fileName, JSON.stringify(activeRequests));
+            this.writeToFile(fileName, "xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+            this.writeToFile(fileName, "----------- WTF Duump ------------------");
+            wtf.dump();
+            this.writeToFile(fileName, "xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+            logWhy();
+            console.log('MEM_DEBUG: dump written to', fileName);
         }, 5000);
+    }
+    writeToFile(file, logData) {
+        fs.writeFile(file, logData, { flag: 'a+' }, err => {
+            if (err) {
+                console.log('MEM_DEBUG: error writing to file', file);
+                console.log(err);
+                return;
+            }
+        });
     }
     /**
      * updatePromise_ is called when debuggee is expired. debuggeeRegistered

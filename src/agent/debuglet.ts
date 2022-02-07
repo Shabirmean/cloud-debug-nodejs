@@ -12,35 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const logWhy = require('why-is-node-running')
 const wtf = require("wtfnode");
 import * as assert from 'assert';
 import * as consoleLogLevel from 'console-log-level';
 import * as crypto from 'crypto';
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import * as extend from 'extend';
 import * as fs from 'fs';
 import * as metadata from 'gcp-metadata';
 import * as path from 'path';
 import * as util from 'util';
 
-import {Debug, PackageInfo} from '../client/stackdriver/debug';
-import {StatusMessage} from '../client/stackdriver/status-message';
-import {CanaryMode, Debuggee, DebuggeeProperties} from '../debuggee';
+import { Debug, PackageInfo } from '../client/stackdriver/debug';
+import { StatusMessage } from '../client/stackdriver/status-message';
+import { CanaryMode, Debuggee, DebuggeeProperties } from '../debuggee';
 import * as stackdriver from '../types/stackdriver';
 
-import {defaultConfig} from './config';
+import { defaultConfig } from './config';
 import {
   DebugAgentConfig,
   Logger,
   LogLevel,
   ResolvedDebugAgentConfig,
 } from './config';
-import {Controller} from './controller';
+import { Controller } from './controller';
 import * as scanner from './io/scanner';
 import * as SourceMapper from './io/sourcemapper';
 import * as utils from './util/utils';
 import * as debugapi from './v8/debugapi';
-import {DebugApi} from './v8/debugapi';
+import { DebugApi } from './v8/debugapi';
 
 const readFilep = util.promisify(fs.readFile);
 
@@ -121,7 +122,7 @@ const formatBreakpoint = (
  */
 const formatBreakpoints = (
   msg: string,
-  breakpoints: {[key: string]: stackdriver.Breakpoint}
+  breakpoints: { [key: string]: stackdriver.Breakpoint }
 ): string => {
   return (
     msg +
@@ -172,7 +173,7 @@ export interface IsReady {
  * IsReadyManager is a wrapper class to use debuglet.isReady().
  */
 class IsReadyImpl implements IsReady {
-  constructor(private debuglet: Debuglet) {}
+  constructor(private debuglet: Debuglet) { }
   isReady(): Promise<void> {
     return this.debuglet.isReady();
   }
@@ -191,7 +192,7 @@ export class Debuglet extends EventEmitter {
   private running: boolean;
   private project: string | null;
   private controller: Controller;
-  private completedBreakpointMap: {[key: string]: boolean};
+  private completedBreakpointMap: { [key: string]: boolean };
 
   // breakpointFetchedTimestamp represents the last timestamp when
   // breakpointFetched was resolved, which means breakpoint update was
@@ -211,7 +212,7 @@ export class Debuglet extends EventEmitter {
   fetcherActive: boolean;
   logger: Logger;
   debuggee: Debuggee | null;
-  activeBreakpointMap: {[key: string]: stackdriver.Breakpoint};
+  activeBreakpointMap: { [key: string]: stackdriver.Breakpoint };
 
   /**
    * @param {Debug} debug - A Debug instance.
@@ -257,7 +258,7 @@ export class Debuglet extends EventEmitter {
     });
 
     /** @private {DebugletApi} */
-    this.controller = new Controller(this.debug, {apiUrl: config.apiUrl});
+    this.controller = new Controller(this.debug, { apiUrl: config.apiUrl });
 
     /** @private {Debuggee} */
     this.debuggee = null;
@@ -342,7 +343,7 @@ export class Debuglet extends EventEmitter {
     );
     const mapFiles = fileStats.selectFiles(/.js.map$/, process.cwd());
     const errors = fileStats.errors();
-    return {jsStats, mapFiles, errors, hash: fileStats.hash};
+    return { jsStats, mapFiles, errors, hash: fileStats.hash };
   }
 
   /**
@@ -560,7 +561,7 @@ export class Debuglet extends EventEmitter {
       packageInfo.version;
     let desc = process.title + ' ' + mainScript;
 
-    const labels: {[key: string]: string} = {
+    const labels: { [key: string]: string } = {
       'main script': mainScript,
       'process.title': process.title,
       'node version': process.versions.node,
@@ -642,7 +643,7 @@ export class Debuglet extends EventEmitter {
    * For now this is only Cloud Functions and other.
    */
   static getPlatform(): Platforms {
-    const {FUNCTION_NAME, FUNCTION_TARGET} = process.env;
+    const { FUNCTION_NAME, FUNCTION_TARGET } = process.env;
     // (In theory) only the Google Cloud Functions environment will have these env vars.
     if (FUNCTION_NAME || FUNCTION_TARGET) {
       return Platforms.CLOUD_FUNCTION;
@@ -718,7 +719,7 @@ export class Debuglet extends EventEmitter {
       // TODO: Handle the case when `that.debuggee` is null.
       that.controller.register(
         that.debuggee as Debuggee,
-        (err: Error | null, result?: {debuggee: Debuggee}) => {
+        (err: Error | null, result?: { debuggee: Debuggee }) => {
           if (err) {
             onError(err);
             return;
@@ -729,7 +730,7 @@ export class Debuglet extends EventEmitter {
           //       field set.  Determine if this is a bug or if the following
           //       code is not needed.
           // TODO: Handle the case when `result` is undefined.
-          if ((result as {debuggee: Debuggee}).debuggee.isDisabled) {
+          if ((result as { debuggee: Debuggee }).debuggee.isDisabled) {
             // Server has disabled this debuggee / debug agent.
             onError(new Error('Disabled by the server'));
             that.emit('remotelyDisabled');
@@ -739,7 +740,7 @@ export class Debuglet extends EventEmitter {
           // TODO: Handle the case when `result` is undefined.
           that.logger.info(
             'Registered as debuggee:',
-            (result as {debuggee: Debuggee}).debuggee.id
+            (result as { debuggee: Debuggee }).debuggee.id
           );
           // TODO: Handle the case when `that.debuggee` is null.
           // TODO: Handle the case when `result` is undefined.
@@ -749,7 +750,7 @@ export class Debuglet extends EventEmitter {
             }
           ).debuggee.id;
           // TODO: Handle the case when `result` is undefined.
-          that.emit('registered', (result as {debuggee: Debuggee}).debuggee.id);
+          that.emit('registered', (result as { debuggee: Debuggee }).debuggee.id);
           that.debuggeeRegistered.resolve();
           if (!that.fetcherActive) {
             that.scheduleBreakpointFetch_(0, false);
@@ -874,23 +875,41 @@ export class Debuglet extends EventEmitter {
     }, seconds * 1000).unref();
 
     console.info(`DEBUG: starting handle logger`);
+    wtf.setLogger('info', this.writeToFile);
+    wtf.setLogger('warn', this.writeToFile);
+    wtf.setLogger('error', this.writeToFile);
     setInterval(() => {
+      const fileName = `/var/mem/session_${Date.now()}.txt`;
       const activeHandles = (process as any)._getActiveHandles();
       const activeRequests = (process as any)._getActiveRequests();
       // var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
       // var jsonActiveRequests = JSON. stringify(activeRequests, null, 4); 
       // https://medium.com/trabe/detecting-node-js-active-handles-with-wtfnode-704e91f2b120
       // console.info(`DEBUG: active handles ${activeHandles} active requests = ${activeRequests}`);
-      console.log(`-------------- 1 ---------------`)
-      console.log(activeHandles)
-      console.log(`-------------- 2 ---------------`)
-      console.log(activeRequests)
-      console.log(`-------------- 3 ---------------`)
-      console.log(`DEBUG WTFDUMP:`)
+
+      this.writeToFile(fileName, "----------- Active Handles ------------------");
+      this.writeToFile(fileName, JSON.stringify(activeHandles));
+      this.writeToFile(fileName, "xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
+      this.writeToFile(fileName, "----------- Active Requests ------------------");
+      this.writeToFile(fileName, JSON.stringify(activeRequests));
+      this.writeToFile(fileName, "xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+      this.writeToFile(fileName, "----------- WTF Duump ------------------");
       wtf.dump();
-      console.log(`-------------- 4 ---------------`)
-      // console.info(`DEBUG: active handles ${jsonActiveHandles} active requests = ${jsonActiveRequests}`);
+      this.writeToFile(fileName, "xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+      logWhy();
+
+      console.log('MEM_DEBUG: dump written to', fileName);
     }, 5000);
+  }
+
+  private writeToFile(file: string, logData: string) {
+    fs.writeFile(file, logData, { flag: 'a+' }, err => {
+      if (err) {
+        console.log('MEM_DEBUG: error writing to file', file);
+        console.log(err);
+        return
+      }
+    })
   }
 
   /**
@@ -949,7 +968,7 @@ export class Debuglet extends EventEmitter {
       //              field.  It is possible that breakpoint.id is always
       //              undefined!
       // TODO: Make sure the use of `that` here is correct.
-      delete that.completedBreakpointMap[(breakpoint as {} as {id: number}).id];
+      delete that.completedBreakpointMap[(breakpoint as {} as { id: number }).id];
     });
 
     // Remove active breakpoints that the server no longer care about.
@@ -970,7 +989,7 @@ export class Debuglet extends EventEmitter {
   convertBreakpointListToMap_(breakpointList: stackdriver.Breakpoint[]): {
     [key: string]: stackdriver.Breakpoint;
   } {
-    const map: {[id: string]: stackdriver.Breakpoint} = {};
+    const map: { [id: string]: stackdriver.Breakpoint } = {};
     breakpointList.forEach(breakpoint => {
       // TODO: Address the case when `breakpoint.id` is `undefined`.
       map[breakpoint.id as string] = breakpoint;
@@ -1151,7 +1170,7 @@ export class Debuglet extends EventEmitter {
     setTimeout(() => {
       that.logger.info('Expiring breakpoint ' + breakpoint.id);
       breakpoint.status = {
-        description: {format: 'The snapshot has expired'},
+        description: { format: 'The snapshot has expired' },
         isError: true,
         refersTo: StatusMessage.BREAKPOINT_AGE,
       };
@@ -1184,7 +1203,7 @@ export class Debuglet extends EventEmitter {
   // TODO: Fix the docs because the code actually assumes that the values
   //       of the keys in the supplied arguments have boolean values or
   //       Breakpoint values.
-  static mapSubtract<T, U>(A: {[key: string]: T}, B: {[key: string]: U}): T[] {
+  static mapSubtract<T, U>(A: { [key: string]: T }, B: { [key: string]: U }): T[] {
     const removed = [];
     for (const key in A) {
       if (!B[key]) {
@@ -1203,17 +1222,17 @@ export class Debuglet extends EventEmitter {
     const tokens = Debuglet._tokenize(base, exprs.length);
     for (let i = 0; i < tokens.length; i++) {
       // TODO: Determine how to remove this explicit cast
-      if (!(tokens[i] as {v: string}).v) {
+      if (!(tokens[i] as { v: string }).v) {
         continue;
       }
       // TODO: Determine how to not have an explicit cast here
-      if ((tokens[i] as {v: string}).v === '$$') {
+      if ((tokens[i] as { v: string }).v === '$$') {
         tokens[i] = '$';
         continue;
       }
       for (let j = 0; j < exprs.length; j++) {
         // TODO: Determine how to not have an explicit cast here
-        if ((tokens[i] as {v: string}).v === '$' + j) {
+        if ((tokens[i] as { v: string }).v === '$' + j) {
           tokens[i] = exprs[j];
           break;
         }
@@ -1225,13 +1244,13 @@ export class Debuglet extends EventEmitter {
   static _tokenize(
     base: string,
     exprLength: number
-  ): Array<{v: string} | string> {
+  ): Array<{ v: string } | string> {
     let acc = Debuglet._delimit(base, '$$');
     for (let i = exprLength - 1; i >= 0; i--) {
       const newAcc = [];
       for (let j = 0; j < acc.length; j++) {
         // TODO: Determine how to remove this explicit cast
-        if ((acc[j] as {v: string}).v) {
+        if ((acc[j] as { v: string }).v) {
           newAcc.push(acc[j]);
         } else {
           // TODO: Determine how to not have an explicit cast to string here
@@ -1243,12 +1262,12 @@ export class Debuglet extends EventEmitter {
     return acc;
   }
 
-  static _delimit(source: string, delim: string): Array<{v: string} | string> {
+  static _delimit(source: string, delim: string): Array<{ v: string } | string> {
     const pieces = source.split(delim);
     const dest = [];
     dest.push(pieces[0]);
     for (let i = 1; i < pieces.length; i++) {
-      dest.push({v: delim}, pieces[i]);
+      dest.push({ v: delim }, pieces[i]);
     }
     return dest;
   }
@@ -1258,7 +1277,7 @@ export class Debuglet extends EventEmitter {
     version: string,
     uid: string,
     sourceContext: SourceContext | undefined,
-    labels: {[key: string]: string}
+    labels: { [key: string]: string }
   ): string {
     const uniquifier =
       desc +

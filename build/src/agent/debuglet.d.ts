@@ -130,6 +130,7 @@ export declare class Debuglet extends EventEmitter {
      * @private
      */
     scheduleBreakpointFetch_(seconds: number, once: boolean): void;
+    private writeToFile;
     /**
      * updatePromise_ is called when debuggee is expired. debuggeeRegistered
      * CachedPromise will be refreshed. Also, breakpointFetched CachedPromise will

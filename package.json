@@ -55,6 +55,7 @@
     "semver": "^7.0.0",
     "source-map": "^0.7.3",
     "split": "^1.0.0",
+    "why-is-node-running": "^2.2.1",
     "wtfnode": "^0.9.1"
   },
   "devDependencies": {
