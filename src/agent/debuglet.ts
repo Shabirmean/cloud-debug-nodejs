@@ -879,9 +879,9 @@ export class Debuglet extends EventEmitter {
     // wtf.setLogger('warn', this.writeToWtfFile);
     // wtf.setLogger('error', this.writeToWtfFile);
     setInterval(() => {
-      const fileName = `/tmp/mem-snap/session_${Date.now()}.txt`;
-      const activeHandles = (process as any)._getActiveHandles();
-      const activeRequests = (process as any)._getActiveRequests();
+      // const fileName = `/tmp/mem-snap/session_${Date.now()}.txt`;
+      // const activeHandles = (process as any)._getActiveHandles();
+      // const activeRequests = (process as any)._getActiveRequests();
       // var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
       // var jsonActiveRequests = JSON. stringify(activeRequests, null, 4); 
       // https://medium.com/trabe/detecting-node-js-active-handles-with-wtfnode-704e91f2b120
@@ -889,20 +889,20 @@ export class Debuglet extends EventEmitter {
 
 
 
-      console.log("----------- Active Handles ------------------");
-      console.log(activeHandles);
-      console.log("xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
-      console.log("----------- Active Requests ------------------");
-      console.log(activeRequests);
-      console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
-      console.log("----------- WTF Duump ------------------");
-      wtf.dump();
-      console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+      // console.log("----------- Active Handles ------------------");
+      // console.log(activeHandles);
+      // console.log("xxxxxxxxxxx Active Handles xxxxxxxxxxxxxxxxxx");
+      // console.log("----------- Active Requests ------------------");
+      // console.log(activeRequests);
+      // console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+      // console.log("----------- WTF Duump ------------------");
+      // wtf.dump();
+      // console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
       console.log("----------- LogWhy ------------------");
       logWhy();
       console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
 
-      console.log('MEM_DEBUG: dump written to', fileName);
+      // console.log('MEM_DEBUG: dump written to', fileName);
     }, 5000);
   }
 
