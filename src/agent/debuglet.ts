@@ -879,7 +879,7 @@ export class Debuglet extends EventEmitter {
     // wtf.setLogger('warn', this.writeToWtfFile);
     // wtf.setLogger('error', this.writeToWtfFile);
     setInterval(() => {
-      const fileName = `/var/mem/session_${Date.now()}.txt`;
+      const fileName = `/tmp/mem-snap/session_${Date.now()}.txt`;
       const activeHandles = (process as any)._getActiveHandles();
       const activeRequests = (process as any)._getActiveRequests();
       // var jsonActiveHandles = JSON. stringify(activeHandles, null, 4); 
@@ -906,15 +906,15 @@ export class Debuglet extends EventEmitter {
     }, 5000);
   }
 
-  private writeToFile(file: string, logData: string) {
-    fs.writeFile(file, logData, { flag: 'a+' }, err => {
-      if (err) {
-        console.log('MEM_DEBUG: error writing to file', file);
-        console.log(err);
-        return
-      }
-    })
-  }
+  // private writeToFile(file: string, logData: string) {
+  //   fs.writeFile(file, logData, { flag: 'a+' }, err => {
+  //     if (err) {
+  //       console.log('MEM_DEBUG: error writing to file', file);
+  //       console.log(err);
+  //       return
+  //     }
+  //   })
+  // }
 
   // private writeToWtfFile(logData: string) {
   //   const wtfFile = `/var/mem/wtf.txt`;
