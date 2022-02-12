@@ -895,9 +895,9 @@ export class Debuglet extends EventEmitter {
       // console.log("----------- Active Requests ------------------");
       // console.log(activeRequests);
       // console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
-      // console.log("----------- WTF Duump ------------------");
-      // wtf.dump();
-      // console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
+      console.log("----------- WTF Duump ------------------");
+      wtf.dump();
+      console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
       console.log("----------- LogWhy ------------------");
       logWhy();
       console.log("xxxxxxxxxxx LogWhy xxxxxxxxxxxxxxxxxx");
