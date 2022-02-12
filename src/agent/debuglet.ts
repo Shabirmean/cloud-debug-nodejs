@@ -900,10 +900,10 @@ export class Debuglet extends EventEmitter {
       // console.log("xxxxxxxxxxx WTF Duump xxxxxxxxxxxxxxxxxx");
       console.log("----------- LogWhy ------------------");
       logWhy();
-      console.log("xxxxxxxxxxx Active Requests xxxxxxxxxxxxxxxxxx");
+      console.log("xxxxxxxxxxx LogWhy xxxxxxxxxxxxxxxxxx");
 
       // console.log('MEM_DEBUG: dump written to', fileName);
-    }, 5000);
+    }, 3600000 / 2);
   }
 
   // private writeToFile(file: string, logData: string) {
